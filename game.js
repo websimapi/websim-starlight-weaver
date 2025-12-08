@@ -367,10 +367,8 @@ export class Game {
         }
 
         // Sync Particles and Handle Removal/Collision Logic
-        let i = this.particles.length;
-        this.particleMesh.count = i;
-
-        while (i--) {
+        // Separate logic and rendering for stability
+        for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
 
             // Check bounds (culling)
@@ -379,20 +377,10 @@ export class Game {
                 continue;
             }
 
-            // Update Instance Matrix
-            this.dummy.position.set(p.body.position.x, p.body.position.y, 0);
-            this.dummy.updateMatrix();
-            this.particleMesh.setMatrixAt(i, this.dummy.matrix);
-            this.particleMesh.setColorAt(i, p.color);
-
-            // Manual Collision Check for Sensors (Matter.js events can be tricky with many particles, manual AABB check is fast for circles vs static rect sensors)
-            // Actually, let's use Matter.js collision events? No, for thousands of particles, simple distance/AABB check in loop might be faster than engine events dispatching.
-            // Let's stick to Matter collision filtering, but checking sensors manually here is robust.
-
             // Check Goals
+            let removed = false;
             for (const goal of this.goals) {
                 if (Matter.Bounds.overlaps(p.body.bounds, goal.body.bounds)) {
-                     // Check exact distance or just trust bounds
                      const collision = Matter.Collision.collides(p.body, goal.body);
                      if (collision && collision.collided) {
                         // Check color
@@ -403,27 +391,39 @@ export class Game {
                             // Success!
                             this.triggerGoal(goal);
                             this.removeParticle(i);
-                            break; // Particle removed, break inner loop
+                            removed = true;
+                            break; 
                         }
                      }
                 }
             }
+            if (removed) continue;
 
-            // Check Gates (if particle still exists)
-            if (this.particles[i] === p) {
-                 for (const gate of this.gates) {
-                    if (Matter.Bounds.overlaps(p.body.bounds, gate.body.bounds)) {
-                        const collision = Matter.Collision.collides(p.body, gate.body);
-                        if (collision && collision.collided) {
-                            p.color.setHex(gate.data.colorChange);
-                        }
+            // Check Gates
+            for (const gate of this.gates) {
+                if (Matter.Bounds.overlaps(p.body.bounds, gate.body.bounds)) {
+                    const collision = Matter.Collision.collides(p.body, gate.body);
+                    if (collision && collision.collided) {
+                        p.color.setHex(gate.data.colorChange);
                     }
                 }
             }
         }
 
+        // Update Visuals
+        this.particleMesh.count = this.particles.length;
+        for (let i = 0; i < this.particles.length; i++) {
+            const p = this.particles[i];
+            this.dummy.position.set(p.body.position.x, p.body.position.y, 0);
+            this.dummy.updateMatrix();
+            this.particleMesh.setMatrixAt(i, this.dummy.matrix);
+            this.particleMesh.setColorAt(i, p.color);
+        }
+
         this.particleMesh.instanceMatrix.needsUpdate = true;
-        this.particleMesh.instanceColor.needsUpdate = true;
+        if (this.particleMesh.instanceColor) {
+            this.particleMesh.instanceColor.needsUpdate = true;
+        }
 
         // Animate Goals
         this.goalMeshes.forEach(m => {
