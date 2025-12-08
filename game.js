@@ -4,6 +4,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { PhysicsWorld } from './physics.js';
 import { LEVELS } from './levels.js';
+import Matter from 'matter-js';
 
 export class Game {
     constructor(container, assets) {
@@ -392,7 +393,8 @@ export class Game {
             for (const goal of this.goals) {
                 if (Matter.Bounds.overlaps(p.body.bounds, goal.body.bounds)) {
                      // Check exact distance or just trust bounds
-                     if (Matter.Collision.collides(p.body, goal.body)) {
+                     const collision = Matter.Collision.collides(p.body, goal.body);
+                     if (collision && collision.collided) {
                         // Check color
                         const required = goal.data.requiredColor;
                         const pColorHex = p.color.getHex();
@@ -411,7 +413,8 @@ export class Game {
             if (this.particles[i] === p) {
                  for (const gate of this.gates) {
                     if (Matter.Bounds.overlaps(p.body.bounds, gate.body.bounds)) {
-                        if (Matter.Collision.collides(p.body, gate.body)) {
+                        const collision = Matter.Collision.collides(p.body, gate.body);
+                        if (collision && collision.collided) {
                             p.color.setHex(gate.data.colorChange);
                         }
                     }
