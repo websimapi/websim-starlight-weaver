@@ -1,0 +1,10 @@
+// inside initInput
+const resumeAudio = () => {
+    if (this.listener.context.state === 'suspended') {
+        this.listener.context.resume();
+    }
+    window.removeEventListener('touchstart', resumeAudio);
+    window.removeEventListener('mousedown', resumeAudio);
+};
+window.addEventListener('touchstart', resumeAudio);
+window.addEventListener('mousedown', resumeAudio);

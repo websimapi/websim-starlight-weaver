@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Starlight Weaver</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #050510; touch-action: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #canvas-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; display: flex; flex-direction: column; justify-content: space-between; }
+        .hud-top { padding: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .hud-bottom { padding: 20px; display: flex; justify-content: center; gap: 20px; padding-bottom: 30px; }
+        
+        button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            pointer-events: auto;
+            transition: all 0.2s ease;
+        }
+        
+        button:active { background: rgba(255, 255, 255, 0.3); transform: scale(0.95); }
+        
+        #level-info {
+            color: rgba(255, 255, 255, 0.8);
+            text-align: right;
+        }
+        
+        h1 { margin: 0; font-size: 1.2rem; font-weight: 300; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        p { margin: 5px 0 0 0; font-size: 0.8rem; opacity: 0.7; }
+
+        #loading {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; color: white; display: flex; justify-content: center; align-items: center;
+            z-index: 10; transition: opacity 0.5s;
+        }
+        
+        /* Tutorial overlay */
+        .tutorial {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s;
+            text-shadow: 0 0 10px black;
+            pointer-events: none;
+        }
+    </style>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://esm.sh/three@0.160.0",
+            "three/addons/": "https://esm.sh/three@0.160.0/examples/jsm/",
+            "matter-js": "https://esm.sh/matter-js@0.19.0"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="loading">Loading Starlight...</div>
+    <div id="canvas-container"></div>
+    <div id="ui-layer">
+        <div class="hud-top">
+            <div id="controls">
+                <button id="reset-btn">Reset Lines</button>
+            </div>
+            <div id="level-info">
+                <h1 id="level-name">Level 1</h1>
+                <p id="level-desc">Draw to guide the light.</p>
+            </div>
+        </div>
+        <div class="tutorial" id="tutorial-text">Drag to draw lines</div>
+        <div class="hud-bottom">
+            <!-- Dynamic tool selector could go here -->
+        </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4c6229722a6346bc8eb5cb0e5eae5d41","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
