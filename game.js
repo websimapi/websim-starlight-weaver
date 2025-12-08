@@ -252,6 +252,11 @@ export class Game {
         document.getElementById('level-name').textContent = levelData.name;
         document.getElementById('level-desc').textContent = levelData.description;
 
+        // Apply Physics Config
+        if (levelData.gravity) {
+            this.physics.setGravity(levelData.gravity.x, levelData.gravity.y);
+        }
+
         // Clear existing
         this.clearLines();
         // Clear particles

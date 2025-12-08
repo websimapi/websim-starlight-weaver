@@ -24,11 +24,16 @@ export class PhysicsWorld {
         Matter.Engine.update(this.engine, dt * 1000);
     }
 
+    setGravity(x, y) {
+        this.engine.gravity.x = x;
+        this.engine.gravity.y = y;
+    }
+
     createParticle(x, y, radius) {
         const body = Matter.Bodies.circle(x, y, radius, {
             restitution: 0.5, // Bounciness
             friction: 0.0,
-            frictionAir: 0.02,
+            frictionAir: 0.002,
             density: 0.001,
             collisionFilter: {
                 category: this.CATS.PARTICLE,

@@ -3,7 +3,7 @@ export const LEVELS = [
         name: "First Light",
         description: "Guide the starlight to the crystal.",
         spawnRate: 10, 
-        gravity: { x: 0, y: 0.5 },
+        gravity: { x: 0, y: -0.3 },
         spawners: [
             { x: 0, y: 800, color: 0xffffff, radius: 20 } 
         ],
@@ -16,7 +16,7 @@ export const LEVELS = [
         name: "Prism Break",
         description: "Blue crystals need blue light.",
         spawnRate: 8,
-        gravity: { x: 0, y: 0.5 },
+        gravity: { x: 0, y: -0.3 },
         spawners: [
             { x: -400, y: 800, color: 0xffffff, radius: 20 }
         ],
